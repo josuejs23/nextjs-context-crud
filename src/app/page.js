@@ -6,10 +6,12 @@ const page = () => {
   const { tasks } = useTasks();
   console.log(tasks);
   return (
-    <div>
-      {tasks.map((task) => (
-        <TaskCard task={task} key={task.id} />
-      ))}
+    <div className="flex justify-center">
+      <div className="w-7/12">
+        {tasks.reverse().map((task) => (
+          <TaskCard task={task} key={task.id} />
+        ))}
+      </div>
     </div>
   );
 };

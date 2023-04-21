@@ -14,14 +14,22 @@ const TaskCard = ({ task: { title, description, id } }) => {
   };
   return (
     <div
-      style={{ background: "#202020", color: "white" }}
+      className="bg-gray-700 hover:bg-slate-600 cursor-pointer px-20 py-5 m-2"
       onClick={(e) => {
         router.push(`/edit/${id}`);
       }}
     >
-      <h2>{title}</h2>
-      <button onClick={hadledDeleteClick}>Delete</button>
+      <div className="flex justify-between">
+        <h2>{title}</h2>
+        <button
+          className="inline-flex items-center bg-red-800 hover:bg-red-700 px-10 py-2 rounded-md"
+          onClick={hadledDeleteClick}
+        >
+          Delete
+        </button>
+      </div>
       <p>{description}</p>
+      <span className="text-gray-400 text-xs">{id}</span>
     </div>
   );
 };
