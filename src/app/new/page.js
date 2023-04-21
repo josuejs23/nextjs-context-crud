@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 const page = ({ params }) => {
   const { id } = params;
   const [task, setTask] = useState({ title: "", description: "" });
-  const { createTask, tasks = [] } = useTasks();
+  const { createTask, tasks, updateTasks } = useTasks();
   const router = useRouter();
 
   const handleChange = (e) =>
@@ -26,7 +26,7 @@ const page = ({ params }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (params.id) {
-      console.log("Editando...");
+      updateTasks(params.id, task);
     } else {
       createTask(task);
     }

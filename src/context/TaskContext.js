@@ -27,8 +27,18 @@ export const TaskProvider = ({ children }) => {
   const removeTask = (id) => {
     setTasks([...tasks.filter((task) => task.id !== id)]);
   };
+
+  const updateTasks = (id, updatedTask) => {
+    setTasks([
+      ...tasks.map((task) =>
+        task.id === id ? { ...task, ...updatedTask } : task
+      ),
+    ]);
+  };
   return (
-    <TaskContext.Provider value={{ tasks, createTask, removeTask }}>
+    <TaskContext.Provider
+      value={{ tasks, createTask, removeTask, updateTasks }}
+    >
       {children}
     </TaskContext.Provider>
   );
