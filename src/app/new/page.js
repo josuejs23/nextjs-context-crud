@@ -2,54 +2,54 @@
 import React, { useState, useEffect } from "react";
 import { useTasks } from "../../context/TaskContext";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 
 const page = ({ params }) => {
   const { id } = params;
-  const [task, setTask] = useState({ title: "", description: "" });
   const { createTask, tasks, updateTasks } = useTasks();
   const router = useRouter();
-
-  const handleChange = (e) =>
-    setTask({ ...task, [e.target.name]: e.target.value });
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   useEffect(() => {
     console.log("Este es el id", id);
     const taskToEdit = tasks.find((task) => task.id === id);
-    taskToEdit
-      ? setTask({
-          title: taskToEdit.title,
-          description: taskToEdit.description,
-        })
-      : null;
+    if (taskToEdit) {
+      setValue("title", taskToEdit.title);
+      setValue("description", taskToEdit.description);
+    }
   }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const onSubmit = handleSubmit((data) => {
     if (params.id) {
-      updateTasks(params.id, task);
+      updateTasks(params.id, data);
     } else {
-      createTask(task);
+      createTask(data);
     }
     router.push("/");
-  };
+  });
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={onSubmit}
       style={{ display: "flex", flexDirection: "column", width: "30%" }}
     >
       <input
-        name="title"
-        onChange={handleChange}
         placeholder="write a title"
-        value={task.title}
+        {...register("title", { required: true })}
       />
+      {errors.title && <span>This field is required</span>}
+
       <textarea
-        name="description"
-        onChange={handleChange}
         placeholder="wirte a description"
-        value={task.description}
+        {...register("description", { required: true })}
       />
+      {errors.description && <span>this field is required</span>}
+
       <button>Save</button>
     </form>
   );
