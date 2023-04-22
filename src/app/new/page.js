@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 
-const page = ({ params }) => {
+const Page = ({ params }) => {
   const { id } = params;
   const { createTask, tasks, updateTasks } = useTasks();
   const router = useRouter();
@@ -78,4 +78,4 @@ const page = ({ params }) => {
   );
 };
 
-export default page;
+export default Page;
