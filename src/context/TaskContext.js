@@ -12,13 +12,17 @@ export const useTasks = () => {
 
 export const TaskProvider = ({ children }) => {
   const [tasks, setTasks] = useLocalStorage("tasks", []);
-  const createTask = ({ title, description }) => {
+  const createTask = ({ title, description, requirements }) => {
     setTasks([
       ...tasks,
       {
         id: uuid(),
         title,
         description,
+        requirements: requirements.map((requirement) => ({
+          ...requirement,
+          id: uuid(),
+        })),
       },
     ]);
   };
@@ -28,15 +32,20 @@ export const TaskProvider = ({ children }) => {
   };
 
   const updateTasks = (id, updatedTask) => {
+    console.log(updateTasks);
     setTasks([
       ...tasks.map((task) =>
         task.id === id ? { ...task, ...updatedTask } : task
       ),
     ]);
   };
+
+  const updateRequirements = (id) => {
+    console.log(tasks.find((task) => task.id === id));
+  };
   return (
     <TaskContext.Provider
-      value={{ tasks, createTask, removeTask, updateTasks }}
+      value={{ tasks, createTask, removeTask, updateTasks, updateRequirements }}
     >
       {children}
     </TaskContext.Provider>

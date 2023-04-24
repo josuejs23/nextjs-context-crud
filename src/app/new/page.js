@@ -2,19 +2,26 @@
 import React, { useEffect } from "react";
 import { useTasks } from "../../context/TaskContext";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 
 const Page = ({ params }) => {
   const { id } = params;
   const { createTask, tasks, updateTasks } = useTasks();
   const router = useRouter();
+
   const {
     register,
     setValue,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  const { fields, append } = useFieldArray({
+    control,
+    name: "requirements",
+  });
 
   useEffect(() => {
     console.log("Este es el id", id);
@@ -22,6 +29,7 @@ const Page = ({ params }) => {
     if (taskToEdit) {
       setValue("title", taskToEdit.title);
       setValue("description", taskToEdit.description);
+      setValue("requirements", taskToEdit.requirements);
     }
   }, []);
 
@@ -31,6 +39,7 @@ const Page = ({ params }) => {
       toast.success("Task updated");
     } else {
       createTask(data);
+      console.log(data);
       toast.success("Task created");
     }
     router.push("/");
@@ -66,6 +75,32 @@ const Page = ({ params }) => {
           </span>
         )}
 
+        {fields.map((field, index) => {
+          return (
+            <div key={field.id} className="flex items-center">
+              <input
+                className=""
+                type="checkbox"
+                {...register(`requirements.${index}.done`)}
+              />
+              <input
+                className="bg-gray-800 py-3 px-4 mb-2 block focus:outline-none w-full"
+                type="text"
+                {...register(`requirements.${index}.description`)}
+              />
+            </div>
+          );
+        })}
+        <button
+          type="button"
+          className="bg-green-500 hover:bg-green-400 rounded-sm"
+          onClick={() => {
+            console.log(fields);
+            append({ description: "", done: false });
+          }}
+        >
+          New Requirement
+        </button>
         <button
           className={
             "bg-blue-500 hover:bg-blue-400 rounded-sm disabled:opacity-30"

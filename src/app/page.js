@@ -8,7 +8,7 @@ const Page = () => {
   return (
     <div className="flex justify-center">
       <div className="w-7/12">
-        {tasks.reverse().map((task) => (
+        {tasks.map((task) => (
           <TaskCard task={task} key={task.id} />
         ))}
       </div>

@@ -1,10 +1,23 @@
 import { useTasks } from "@/context/TaskContext";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import Requirement from "./Requirement";
+import RequirementList from "./RequirementList";
 
-const TaskCard = ({ task: { title, description, id } }) => {
+const TaskCard = ({
+  task: { title, description, id, requirements = [] },
+  task,
+}) => {
   const router = useRouter();
   const { removeTask } = useTasks();
+  console.log(requirements);
+  const getProgress = () => {
+    return (
+      (requirements.filter((requirement) => requirement.done === true).length /
+        requirements.length) *
+        100 || "0"
+    );
+  };
   const hadledDeleteClick = (e) => {
     e.stopPropagation();
     if (window.confirm("Are your sure?")) {
@@ -29,7 +42,17 @@ const TaskCard = ({ task: { title, description, id } }) => {
         </button>
       </div>
       <p>{description}</p>
+      <RequirementList requirements={requirements} id={id} task={task} />
       <span className="text-gray-400 text-xs">{id}</span>
+      <div className="w-full bg-gray-200 rounded-full dark:bg-gray-800">
+        <div
+          className="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
+          style={{ width: `${getProgress()}%` }}
+        >
+          {" "}
+          {`${Math.floor(getProgress())}%`}
+        </div>
+      </div>
     </div>
   );
 };
